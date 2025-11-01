@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Coffee House - Menú Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif}
+  html,body{height:100%}
+  body{
+    min-height:100vh;
+    background-color:#5d4037;
+    color:#ffffff;
+    transition:background 1s ease, color 0.4s ease;
+    overflow-x:hidden;
+    position:relative;
+  }
+  /* Vapor animado */
+  .steam{
+    position:fixed;
+    top:10%;
+    left:50%;
+    width:300px;
+    height:260px;
+    transform:translateX(-50%);
+    pointer-events:none;
+    background: radial-gradient(circle, rgba(255,255,255,0.45) 8%, transparent 55%);
+    filter: blur(60px);
+    animation: steamMove 6s infinite ease-in-out;
+    opacity:0.35;
+    z-index:90;
+  }
+  @keyframes steamMove{
+    0%{ transform:translateX(-50%) translateY(0); opacity:0.25}
+    40%{ transform:translateX(-43%) translateY(-30px); opacity:0.45}
+    80%{ transform:translateX(-57%) translateY(-60px); opacity:0.15}
+    100%{ transform:translateX(-50%) translateY(0); opacity:0.25}
+  }
+  body.bg-animate{ animation: fadeZoom 1.2s ease forwards; }
+  @keyframes fadeZoom{ 0%{opacity:0;transform:scale(1.06)} 100%{opacity:1;transform:scale(1)} }
+  /* Header */
+  header{
+    background: rgba(93,64,55,0.95);
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 22px;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:100;
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;cursor:pointer}
+  .logo img{width:48px;height:48px;border-radius:50%;object-fit:cover;transition:transform .6s}
+  .logo img:hover{transform:rotate(360deg)}
+  .left-controls{display:flex;align-items:center;gap:10px}
+  nav{display:none;flex-direction:column;position:absolute;top:60px;right:22px;background:#5d4037;width:220px;border-radius:8px;overflow:hidden;z-index:120}
+  nav.active{display:flex}
+  nav a{color:#ffffff;padding:12px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:500}
+  nav a:hover{background:rgba(255,255,255,0.05)}
+  .menu-toggle{display:flex;flex-direction:column;cursor:pointer;padding:6px}
+  .menu-toggle span{height:3px;width:25px;background:#ffffff;margin:3px 0;border-radius:2px;transition:all .3s}
+  .menu-toggle.rotate span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+  .menu-toggle.rotate span:nth-child(2){opacity:0}
+  .menu-toggle.rotate span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+  .btn-mode, .btn-carrito{
+    background:rgba(0,0,0,0.25);
+    padding:8px 12px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.12);
+    cursor:pointer;
+    color:#ffffff;
+    font-size:.9rem;
+    transition:0.3s;
+  }
+  .btn-mode:hover, .btn-carrito:hover{background:rgba(0,0,0,0.35);}
+  main{padding:110px 20px 100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;align-items:start;max-width:1300px;margin:0 auto}
+  .producto{
+    background:rgba(255,255,255,0.06);
+    border-radius:14px;
+    overflow:hidden;
+    width:100%;
+    cursor:pointer;
+    transition:transform .35s,box-shadow .35s,filter .35s,background .35s;
+    position:relative;
+    opacity:0;
+    transform:translateY(30px);
+    border:1px solid rgba(255,255,255,0.03);
+    backdrop-filter: blur(6px);
+  }
+  .producto.visible{opacity:1;transform:translateY(0)}
+  .producto:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,0.5);filter:brightness(1.08)}
+  .producto img{width:100%;height:160px;object-fit:cover;display:block}
+  .producto .info{padding:12px;text-align:center;background:linear-gradient(180deg,rgba(0,0,0,0.04), rgba(0,0,0,0.18))}
+  .producto h4{font-size:1.05rem;margin-bottom:6px}
+  .producto p{font-size:.92rem;color:#e6e6e6}
+  .categoria{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 6px 4px 6px;}
+  .categoria h3{font-size:1.2rem;letter-spacing:.3px}
+  footer{
+    background-color: rgba(93,64,55,0.9);
+    text-align:center;
+    padding:18px;
+    transition: background-color .6s ease, backdrop-filter .6s ease;
+    backdrop-filter: blur(4px);
+    position:fixed;
+    bottom:16px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:95;
+    border-radius:10px;
+    min-width:220px;
+    max-width:90%;
+    box-shadow:0 12px 30px rgba(0,0,0,0.35);
+    color:#ffffff;
+    font-weight:500;
+  }
+  body.bg-animate footer{background-color: rgba(0,0,0,0.18) !important;backdrop-filter: blur(10px);color:#ffffff;}
+  .light-mode{background:#f4ebe2;color:#222222}
+  .light-mode header{background:rgba(244,235,226,0.95)}
+  .light-mode .producto{background:rgba(0,0,0,0.03);color:#222222;border:1px solid rgba(0,0,0,0.04)}
+  .light-mode footer{background:rgba(244,235,226,0.9);color:#222222}
+  .add-cart{
+    margin-top:8px;
+    padding:6px 10px;
+    background:#795548;
+    color:#ffffff;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.3s;
+  }
+  .add-cart:hover{background:#6d4c41;}
+  @media (max-width:700px){
+    .logo img{width:42px;height:42px}
+    .producto img{height:140px}
+    header{padding:10px 14px}
+    main{padding:100px 12px 120px;gap:12px}
+  }
+</style>
+</head>
+<body>
+  <div class="steam" aria-hidden="true"></div>
+
+  <header>
+    <div class="left-controls" style="align-items:center;">
+      <div class="logo" onclick="window.location.href='index2.html'">
+        <img src="logo.jpeg" alt="Logo Coffee House">
+        <div style="display:flex;flex-direction:column;line-height:1">
+          <span style="font-size:1rem">Coffee House</span>
+          <small style="font-weight:400;opacity:.85">Menú Premium</small>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="btn-mode" id="modeToggle" title="Activar modo claro/oscuro">Modo</button>
+      <button class="btn-carrito" id="viewCart" title="Ver carrito">Carrito 🛒</button>
+      <nav id="menu" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a>
+        <a href="precios.html">Ofertas</a>
+        <a href="contacto.html">Contacto</a>
+      </nav>
+      <div class="menu-toggle" id="toggle" aria-hidden="false" title="Abrir menú">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Cafés -->
+    <div class="categoria"><h3>Cafés & Especialidades</h3><small>Seleccioná para ver fondo</small></div>
+    <div class="producto" data-nombre="Espresso Doble" data-precio="450">
+      <img src="https://images.unsplash.com/photo-1623334044303-241021148842?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Café especial">
+      <div class="info"><h4>Espresso Doble</h4><p>Con crema intensa y cuerpo completo. $450</p></div>
+    </div>
+    <div class="producto" data-nombre="Cappuccino Clásico" data-precio="550">
+      <img src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Cappuccino">
+      <div class="info"><h4>Cappuccino Clásico</h4><p>Espuma densa, aroma a cacao. $550</p></div>
+    </div>
+    <div class="producto" data-nombre="Cold Brew" data-precio="500">
+      <img src="https://images.unsplash.com/photo-1592663527359-cf6642f54cff?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Cold brew">
+      <div class="info"><h4>Cold Brew</h4><p>Extracción fría, sabor suave y limpio. $500</p></div>
+    </div>
+    <div class="producto" data-nombre="Latte Vainilla" data-precio="600">
+      <img src="https://images.unsplash.com/photo-1518057111178-44a106bad636?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Latte">
+      <div class="info"><h4>Latte Vainilla</h4><p>Suave, con espuma sedosa y toque de vainilla. $600</p></div>
+    </div>
+
+    <!-- Desayunos -->
+    <div class="categoria"><h3>Desayunos & Bocadillos</h3><small>Combos ideales para la mañana</small></div>
+    <div class="producto" data-nombre="Desayuno Completo" data-precio="650">
+      <img src="https://images.unsplash.com/photo-1702742322469-36315505728f?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Desayuno completo">
+      <div class="info"><h4>Desayuno Completo</h4><p>Bebida + bagel + jugo natural. $650</p></div>
+    </div>
+    <div class="producto" data-nombre="Tostada de Palta" data-precio="480">
+      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Tostadas">
+      <div class="info"><h4>Tostada de Palta</h4><p>Pan artesanal, palta, semillas y limón. $480</p></div>
+    </div>
+    <div class="producto" data-nombre="Muffin de Arándanos" data-precio="400">
+      <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Muffin arandanos">
+      <div class="info"><h4>Muffin de Arándanos</h4><p>Esponjoso, con arándanos reales. $400</p></div>
+    </div>
+    <div class="producto" data-nombre="Bagel con Q.C." data-precio="420">
+      <img src="https://images.unsplash.com/photo-1528699633788-424224dc89b5?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Bagel">
+      <div class="info"><h4>Bagel con Q.C.</h4><p>Clásico, con queso crema y hierbas. $420</p></div>
+    </div>
+
+    <!-- Facturas / Pastelería -->
+    <div class="categoria"><h3>Facturas & Pastelería</h3><small>Horneado diario</small></div>
+    <div class="producto" data-nombre="Croissant de Manteca" data-precio="350">
+      <img src="https://images.unsplash.com/photo-1623334044303-241021148842?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Croissants">
+      <div class="info"><h4>Croissant de Manteca</h4><p>Hojaldre clásico, flakey y dorado. $350</p></div>
+    </div>
+    <div class="producto" data-nombre="Medialuna Rellena" data-precio="300">
+      <img src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Medialunas">
+      <div class="info"><h4>Medialuna Rellena</h4><p>Con dulce de leche o crema. $300</p></div>
+    </div>
+    <div class="producto" data-nombre="Scone con Mermelada" data-precio="330">
+      <img src="https://images.unsplash.com/photo-1702742322469-36315505728f?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Scones">
+      <div class="info"><h4>Scone con Mermelada</h4><p>Tradicional, perfecto con té. $330</p></div>
+    </div>
+    <div class="producto" data-nombre="Danish de Almendra" data-precio="380">
+      <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?fm=jpg&ixlib=rb-4.1.0&q=60&w=1600" alt="Danish">
+      <div class="info"><h4>Danish de Almendra</h4><p>Relleno con crema y almendra crocante. $380</p></div>
+    </div>
+  </main>
+
+  <footer id="pageFooter">© Coffee House 2025</footer>
+
+  <audio id="bgAudio" loop crossorigin="anonymous">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6b94055143.mp3?filename=relaxing-coffee-shop-ambient-111684.mp3" type="audio/mpeg">
+  </audio>
+
+<script>
+  const toggle = document.getElementById('toggle');
+  const menu = document.getElementById('menu');
+  toggle.addEventListener('click',()=>{toggle.classList.toggle('rotate');menu.classList.toggle('active');});
+  const modeBtn = document.getElementById('modeToggle');
+  modeBtn.addEventListener('click',()=>{document.body.classList.toggle('light-mode');});
+
+  const productos = document.querySelectorAll('.producto');
+  productos.forEach(prod=>{
+    const btn=document.createElement('button');
+    btn.textContent="Agregar al carrito";
+    btn.className="add-cart";
+    prod.querySelector('.info').appendChild(btn);
+    btn.addEventListener('click',()=>{
+      let carrito=JSON.parse(localStorage.getItem('carrito'))||[];
+      carrito.push({nombre:prod.dataset.nombre, precio:parseInt(prod.dataset.precio)});
+      localStorage.setItem('carrito',JSON.stringify(carrito));
+      alert(`${prod.dataset.nombre} agregado al carrito`);
+    });
+    prod.addEventListener('mouseenter',()=>{
+      const src=prod.querySelector('img').src;
+      document.body.style.backgroundImage=`url(${src})`;
+      document.body.classList.add('bg-animate');
+      document.getElementById('pageFooter').style.zIndex=95;
+    });
+    prod.addEventListener('mouseleave',()=>{
+      document.body.style.backgroundImage='none';
+      document.body.classList.remove('bg-animate');
+    });
+    prod.setAttribute('tabindex','0');
+    prod.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){const src=prod.querySelector('img').src;document.body.style.backgroundImage=`url(${src})`;document.body.classList.add('bg-animate');}
+    });
+  });
+
+  function revealProducts(){document.querySelectorAll('.producto').forEach(p=>{const top=p.getBoundingClientRect().top;if(top<window.innerHeight-60)p.classList.add('visible');});}
+  window.addEventListener('scroll',revealProducts);
+  window.addEventListener('load',revealProducts);
+
+  const audio=document.getElementById('bgAudio');
+  audio.volume=0.35;
+  audio.play().catch(()=>{});
+
+  document.getElementById('viewCart').addEventListener('click',()=>{window.location.href='carrito.html';});
+</script>
+</body>
+</html>

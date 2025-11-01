@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coffee House</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+      background-color: #f5e9dd;
+      color: #3e2723;
+    }
+
+    header {
+      background-color: #5d4037;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.6em;
+      font-weight: 700;
+    }
+
+    .logo img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+    }
+
+    /* Animación del logo */
+    #logo-img {
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    #logo-img:hover {
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    nav {
+      display: none;
+      flex-direction: column;
+      background-color: #5d4037;
+      position: absolute;
+      top: 70px;
+      right: 0;
+      width: 200px;
+      padding: 10px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    nav.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 10px;
+    }
+
+    nav a:hover {
+      color: #ffe0b2;
+    }
+
+    .menu-toggle {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      background-color: white;
+      height: 3px;
+      width: 25px;
+      margin: 4px 0;
+      border-radius: 2px;
+    }
+
+    /* Carrusel fade */
+    .carousel {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      margin-top: 70px;
+      overflow: hidden;
+    }
+
+    .fade-slides {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .fade-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .fade-slide.active {
+      opacity: 1;
+    }
+
+    .fade-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(70%);
+    }
+
+    .carousel-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+      background: rgba(60, 34, 24, 0.6);
+      padding: 30px 40px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+      animation: fadeIn 1.5s ease-out;
+      max-width: 90%;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to   { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    .carousel-content h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    .carousel-content p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      background-color: #a1887f;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #8d6e63;
+    }
+
+    footer {
+      background-color: #5d4037;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
+      .carousel-content h1 { font-size: 2em; }
+      .carousel-content p  { font-size: 1em; }
+      .btn               { padding: 10px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="/home/mauro/Documents/pagina-comercial/logo.jpeg" alt="Logo de Coffee House" id="logo-img">
+      Coffee House
+    </div>
+
+    <nav id="menu">
+      <a href="index.html">Inicio</a>
+      <a href="precios.html">Ofertas</a>
+    
+      <a href="contacto.html">Contacto</a>
+    </nav>
+
+    <div class="menu-toggle" id="toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </header>
+
+  <section class="carousel">
+    <div class="fade-slides">
+      <div class="fade-slide active">
+        <img src="https://images.unsplash.com/photo-1556742526-795a8eac090e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=387" alt="Café espresso">
+      </div>
+      <div class="fade-slide">
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1600&q=80" alt="Café latte">
+      </div>
+      <div class="fade-slide">
+        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=80" alt="Granos de café">
+      </div>
+      <div class="fade-slide">
+        <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1600&q=80" alt="Arte latte">
+      </div>
+    </div>
+
+    <div class="carousel-content">
+      <h1>Bienvenido a Coffee House</h1>
+      <p>Disfrutá del aroma, el sabor y la experiencia del mejor café artesanal</p>
+      <a href="precios.html">
+        <button class="btn">Ver ofertas</button>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Coffee House — El sabor que te despierta cada día
+  </footer>
+
+  <script>
+    const toggle = document.getElementById("toggle");
+    const menu   = document.getElementById("menu");
+    toggle.addEventListener("click", () => menu.classList.toggle("active"));
+
+    const slides  = document.querySelectorAll(".fade-slide");
+    let current   = 0;
+
+    function showNextSlide() {
+      slides[current].classList.remove("active");
+      current = (current + 1) % slides.length;
+      slides[current].classList.add("active");
+    }
+
+    setInterval(showNextSlide, 5000);
+  </script>
+
+</body>
+</html>
