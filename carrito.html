@@ -4,24 +4,110 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Carrito - Coffee House</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-  body{font-family:"Poppins",sans-serif;background:#5d4037;color:#fff;min-height:100vh;margin:0;padding:20px;}
-  h1{text-align:center;margin-bottom:20px;}
-  table{width:100%;border-collapse:collapse;margin-bottom:20px;}
-  th,td{padding:12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.2);}
-  th{background:rgba(0,0,0,0.2);}
-  input.qty{width:50px;padding:4px;border-radius:4px;border:none;text-align:center;}
-  .total{font-weight:700;font-size:1.2rem;text-align:right;margin-bottom:20px;}
-  .btn{display:block;width:100%;padding:12px;background:#795548;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;transition:0.3s;margin-top:10px;}
-  .btn:hover{background:#6d4c41;}
-  .btn-eliminar{background:#b71c1c;color:#fff;padding:6px 12px;border:none;border-radius:6px;cursor:pointer;}
-  .btn-eliminar:hover{background:#c62828;}
+  body{
+    font-family:"Poppins",sans-serif;
+    background:linear-gradient(135deg,#4b2c20,#7b4a34);
+    color:#fff;
+    margin:0;
+    padding:20px;
+    min-height:100vh;
+  }
+  h1{text-align:center;font-size:2rem;margin-bottom:30px;}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:#ffffff10;
+    backdrop-filter:blur(8px);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  th,td{
+    padding:12px;
+    text-align:center;
+  }
+  th{
+    background:#ffffff20;
+    font-weight:600;
+  }
+  tr:nth-child(even){background:#ffffff08;}
+  input.qty{
+    width:55px;
+    border:none;
+    border-radius:6px;
+    text-align:center;
+    padding:5px;
+  }
+  .total{
+    font-weight:700;
+    font-size:1.2rem;
+    text-align:right;
+    margin-top:15px;
+    margin-bottom:25px;
+  }
+  .btn{
+    background:#ffb74d;
+    color:#3e2723;
+    border:none;
+    border-radius:10px;
+    padding:12px 20px;
+    font-weight:600;
+    font-size:1rem;
+    cursor:pointer;
+    display:block;
+    width:100%;
+    transition:0.3s;
+  }
+  .btn:hover{
+    background:#ffc76e;
+    transform:scale(1.03);
+  }
+  .btn-eliminar{
+    background:#e53935;
+    color:#fff;
+    border:none;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.3s;
+  }
+  .btn-eliminar:hover{background:#f44336;}
+  .box{
+    background:#ffffff10;
+    padding:20px;
+    border-radius:14px;
+    backdrop-filter:blur(8px);
+    margin-bottom:20px;
+    animation:fadeIn 0.5s ease;
+  }
+  label{display:block;margin-top:10px;}
+  select, input[type="text"], input[type="tel"]{
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    border:none;
+    border-radius:8px;
+    background:#ffffff20;
+    color:#fff;
+  }
+  #reloj{
+    font-size:2.2rem;
+    text-align:center;
+    margin-top:20px;
+    font-weight:600;
+  }
+  #mensajeEntrega{text-align:center;margin-top:8px;font-size:1rem;}
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(10px);}
+    to{opacity:1;transform:translateY(0);}
+  }
 </style>
 </head>
 <body>
 
-<h1>Tu Carrito 🛒</h1>
+<h1>☕ Tu Carrito</h1>
 
 <table id="carritoTable">
   <thead>
@@ -29,8 +115,8 @@
       <th>Producto</th>
       <th>Precio ($)</th>
       <th>Cantidad</th>
-      <th>Tiempo Estimado</th>
-      <th>Acción</th>
+      <th>Tiempo</th>
+      <th></th>
     </tr>
   </thead>
   <tbody></tbody>
@@ -38,15 +124,56 @@
 
 <div class="total" id="total"></div>
 
+<!-- Paso 1: Pago -->
+<div class="box" id="pagoContainer" style="display:none;">
+  <h3>💳 Forma de Pago</h3>
+  <label>Método de pago:</label>
+  <select id="metodoPago">
+    <option value="">Elegir...</option>
+    <option value="tarjeta">Tarjeta de Crédito</option>
+    <option value="mp">Mercado Pago / Billetera Virtual</option>
+  </select>
+
+  <div id="datosMP" style="display:none;">
+    <label>CVU:</label>
+    <input type="text" id="cvu" placeholder="0000003100045678912345">
+    <label>Teléfono asociado:</label>
+    <input type="tel" id="telefono" placeholder="1123456789">
+  </div>
+
+  <button class="btn" id="continuarEntrega">Continuar ➡️</button>
+</div>
+
+<!-- Paso 2: Entrega -->
+<div class="box" id="entregaContainer" style="display:none;">
+  <h3>📦 Método de Entrega</h3>
+  <label>¿Cómo querés recibir tu pedido?</label>
+  <select id="metodoEntrega">
+    <option value="">Elegir...</option>
+    <option value="buscar">Retirar en el local</option>
+    <option value="llevar">Para llevar a domicilio</option>
+  </select>
+
+  <div id="direccionBox" style="display:none;">
+    <label>Dirección o ubicación:</label>
+    <input type="text" id="direccion" placeholder="Ej: Av. Rivadavia 1234, CABA">
+  </div>
+
+  <button class="btn" id="confirmarPedido">Confirmar Pedido ✅</button>
+</div>
+
+<!-- Paso 3: Reloj -->
+<div class="box" id="relojContainer" style="display:none;">
+  <h3>🕒 Preparando tu pedido...</h3>
+  <div id="reloj">00:00</div>
+  <p id="mensajeEntrega"></p>
+</div>
+
 <button class="btn" id="finalizar">Finalizar Pedido</button>
 
 <script>
-  // Obtener carrito desde localStorage
   let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-
-  // Si no tiene tiempo, le asignamos uno por defecto
-  carrito = carrito.map(item => ({...item, tiempo:item.tiempo||5, cantidad: item.cantidad||1}));
-
+  carrito = carrito.map(item => ({...item, tiempo:item.tiempo||5, cantidad:item.cantidad||1}));
   const tbody = document.querySelector('#carritoTable tbody');
 
   function renderCarrito(){
@@ -57,25 +184,24 @@
       const tr=document.createElement('tr');
       tr.innerHTML=`
         <td>${item.nombre}</td>
-        <td>${item.precio}</td>
+        <td>$${item.precio}</td>
         <td><input type="number" class="qty" min="1" value="${item.cantidad}" data-index="${index}"></td>
         <td>${item.tiempo * item.cantidad} min</td>
-        <td><button class="btn-eliminar" data-index="${index}">Eliminar</button></td>
+        <td><button class="btn-eliminar" data-index="${index}">✕</button></td>
       `;
       tbody.appendChild(tr);
       total += item.precio * item.cantidad;
       tiempoTotal += item.tiempo * item.cantidad;
     });
-    document.getElementById('total').textContent=`Total: $${total} - Tiempo estimado: ${tiempoTotal} min`;
+    document.getElementById('total').textContent=`Total: $${total} — Tiempo estimado: ${tiempoTotal} min`;
     attachEvents();
   }
 
   function attachEvents(){
-    // Actualizar cantidad
     document.querySelectorAll('.qty').forEach(input=>{
       input.addEventListener('change', e=>{
-        const index = e.target.dataset.index;
-        let val = parseInt(e.target.value);
+        const index=e.target.dataset.index;
+        let val=parseInt(e.target.value);
         if(val<1) val=1;
         carrito[index].cantidad=val;
         localStorage.setItem('carrito',JSON.stringify(carrito));
@@ -83,10 +209,9 @@
       });
     });
 
-    // Eliminar producto
     document.querySelectorAll('.btn-eliminar').forEach(btn=>{
       btn.addEventListener('click',()=>{
-        const index = btn.dataset.index;
+        const index=btn.dataset.index;
         carrito.splice(index,1);
         localStorage.setItem('carrito',JSON.stringify(carrito));
         renderCarrito();
@@ -97,34 +222,77 @@
   renderCarrito();
 
   document.getElementById('finalizar').addEventListener('click',()=>{
-    // Calcular tiempo total antes de vaciar
-    const tiempoTotal = carrito.reduce((sum,item)=>sum + item.tiempo*item.cantidad,0);
+    document.getElementById('pagoContainer').style.display='block';
+    document.getElementById('finalizar').style.display='none';
+  });
+
+  document.getElementById('metodoPago').addEventListener('change',(e)=>{
+    document.getElementById('datosMP').style.display = e.target.value === 'mp' ? 'block' : 'none';
+  });
+
+  document.getElementById('continuarEntrega').addEventListener('click',()=>{
+    const metodo = document.getElementById('metodoPago').value;
+    if(!metodo) return alert('Seleccioná una forma de pago.');
+    if(metodo==='mp'){
+      const cvu=document.getElementById('cvu').value.trim();
+      const tel=document.getElementById('telefono').value.trim();
+      if(!cvu || !tel) return alert('Completá tu CVU y teléfono.');
+    }
+    document.getElementById('pagoContainer').style.display='none';
+    document.getElementById('entregaContainer').style.display='block';
+  });
+
+  document.getElementById('metodoEntrega').addEventListener('change',(e)=>{
+    document.getElementById('direccionBox').style.display = e.target.value === 'llevar' ? 'block' : 'none';
+  });
+
+  document.getElementById('confirmarPedido').addEventListener('click',()=>{
+    const metodoEntrega=document.getElementById('metodoEntrega').value;
+    if(!metodoEntrega) return alert('Seleccioná cómo querés recibir tu pedido.');
+
+    let tiempoTotal = carrito.reduce((sum,item)=>sum + item.tiempo*item.cantidad,0);
+    let mensaje = "";
+
+    if(metodoEntrega==='llevar'){
+      tiempoTotal += 5;
+      const direccion = document.getElementById('direccion').value.trim();
+      if(!direccion) return alert('Ingresá la dirección.');
+      mensaje = `📍 Entrega en: ${direccion}`;
+    } else {
+      mensaje = "🏠 Retirar en el local.";
+    }
 
     localStorage.removeItem('carrito');
+    document.getElementById('entregaContainer').style.display='none';
+    document.getElementById('relojContainer').style.display='block';
+    document.getElementById('mensajeEntrega').textContent = mensaje;
 
-    function terminarPedido(){
-      if(Notification.permission==='granted'){
-        new Notification("El pedido está listo para retirar!");
-      } else {
-        alert("El pedido está listo para retirar!");
-      }
-      window.location.href='index.html';
-    }
-
-    if(Notification.permission!=='granted'){
-      Notification.requestPermission().then(p=>{
-        if(p==='granted'){
-          setTimeout(terminarPedido, tiempoTotal*60000);
-        } else {
-          alert("Pedido enviado. Volviendo a la página principal.");
-          window.location.href='index.html';
-        }
-      });
-    } else {
-      setTimeout(terminarPedido, tiempoTotal*60000);
-    }
+    iniciarCuentaRegresiva(tiempoTotal);
   });
-</script>
 
+  function iniciarCuentaRegresiva(minutos){
+    let tiempoRestante = minutos * 60;
+    const reloj = document.getElementById('reloj');
+
+    const interval = setInterval(()=>{
+      let min = Math.floor(tiempoRestante / 60);
+      let seg = tiempoRestante % 60;
+      reloj.textContent = `${String(min).padStart(2,'0')}:${String(seg).padStart(2,'0')}`;
+      if(tiempoRestante <= 0){
+        clearInterval(interval);
+        notificarPedidoListo();
+      }
+      tiempoRestante--;
+    },1000);
+  }
+
+  function notificarPedidoListo(){
+    if(Notification.permission==='granted'){
+      new Notification("☕ Tu pedido está listo!");
+    } else {
+      alert("☕ Tu pedido está listo!");
+    }
+  }
+</script>
 </body>
 </html>
