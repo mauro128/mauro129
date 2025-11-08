@@ -4,56 +4,55 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Coffee House</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<
 <style>
-  /* --- ESTILOS ORIGINALES Y MODIFICADOS --- */
+ 
   *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif}
   html,body{height:100%}
   body{
     min-height:100vh;
     background-color:#5d4037;
     color:#ffffff;
-    /* --- TRANSICIÓN MEJORADA --- */
+   
     transition: background 1s ease, background-image 0.6s ease, color 0.4s ease, filter 0.6s ease; /* Transición para el filtro */
     overflow-x:hidden;
     position:relative;
     
-    /* 🎯 PROPIEDADES AÑADIDAS/MODIFICADAS PARA LA IMAGEN DE FONDO */
+    
     background-size: cover; 
     background-position: center center; 
     background-repeat: no-repeat; 
     background-attachment: fixed; 
     
-    /* Filtro inicial para modo oscuro: oscurece un poco la imagen de fondo */
+   
     filter: brightness(0.8); 
   }
   
-  /* ESTILOS ESPECÍFICOS PARA EL MODO CLARO */
+  
   body.light-mode {
-    background-color:#f4ebe2; /* Fondo claro */
-    color:#222222; /* Texto oscuro */
-    /* 🎯 ACLARA LA IMAGEN DE FONDO EN MODO CLARO (1.2 = 120% de brillo) */
+    background-color:#f4ebe2; 
+    color:#222222;
+  
     filter: brightness(1.2); 
   }
 
-  /* --- CONTROL DE FILTROS PARA EVITAR PROBLEMAS --- */
-  /* Si no hay imagen de fondo, se quita el filtro para que el color de fondo se vea normal */
+
   body:not([style*="background-image"]) {
     filter: none;
   }
-  /* Cuando el fondo está animándose (apareciendo), podemos establecer un filtro temporal si es necesario */
+ 
   body.bg-animate[style*="background-image"] {
-    filter: brightness(0.9); /* Ligeramente más oscuro para que la animación destaque */
+    filter: brightness(0.9); 
   }
-  /* Si el modo claro está activo Y hay imagen de fondo, aplicamos el filtro claro */
+ 
   body.light-mode[style*="background-image"] {
     filter: brightness(1.2); 
   }
-  /* Si el modo claro está activo PERO NO hay imagen de fondo, quitamos el filtro */
+ 
   body.light-mode:not([style*="background-image"]) {
     filter: none;
   }
-  /* --- FIN CONTROL DE FILTROS --- */
+  /* --- FIN  FILTROS --- */
 
   .steam{
     position:fixed;top:10%;left:50%;width:300px;height:260px;transform:translateX(-50%);pointer-events:none;
@@ -132,7 +131,7 @@
   }
   .add-cart:hover{background:#6d4c41;}
 
-  /* --- ESTILOS PARA EL CARRUSEL --- */
+  /* ESTILOS  CARRUSEL */
   .carousel-container{
     position:relative;
   }
@@ -186,7 +185,7 @@
     margin-right: 20px;
   }
 
-  /* --- MEDIA QUERIES (Asegurando la vista en móviles) --- */
+  /*  (Asegurando la vista en móviles) */
   @media (max-width:700px){
     .logo img{width:42px;height:42px}
     .producto img{height:140px}
@@ -194,10 +193,10 @@
     main{padding:100px 0 120px}
     .categoria-wrapper{padding: 0 12px}
     
-    /* Ajuste para que los productos sean un poco más pequeños en móvil */
+    /* Ajuste para que los productos sean un poco más pequeños  */
     .producto{width: 200px;} 
 
-    /* Ajuste de los botones redondos para móvil */
+    /* Ajuste de los botones redondos para celular */
     .nav-btn {
         width: 38px; 
         height: 38px;
@@ -244,7 +243,7 @@
   <main>
     
     <div class="categoria-wrapper">
-      <div class="categoria"><h3>Cafés & Especialidades</h3><small>Seleccioná para ver fondo</small></div>
+      <div class="categoria"><h3>Cafés & Beidas</h3><small></small></div>
       <div class="carousel-container">
         <button class="nav-btn left" data-target="carousel-cafe">&lt;</button>
         <div class="carousel-productos" id="carousel-cafe">
@@ -290,7 +289,7 @@
     </div>
     
     <div class="categoria-wrapper">
-      <div class="categoria"><h3>Desayunos & Bocadillos</h3><small>Combos ideales para la mañana</small></div>
+      <div class="categoria"><h3>Desayunos y almuerzo </h3><small></small></div>
       <div class="carousel-container">
         <button class="nav-btn left" data-target="carousel-desayuno">&lt;</button>
         <div class="carousel-productos" id="carousel-desayuno">
@@ -336,7 +335,7 @@
     </div>
 
     <div class="categoria-wrapper">
-      <div class="categoria"><h3>Facturas & Pastelería</h3><small>Horneado diario</small></div>
+      <div class="categoria"><h3>Facturas & Pastelería</h3><small></small></div>
       <div class="carousel-container">
         <button class="nav-btn left" data-target="carousel-pasteleria">&lt;</button>
         <div class="carousel-productos" id="carousel-pasteleria">
@@ -386,15 +385,15 @@
   <footer id="pageFooter">© Coffee House 2025
    <div style="margin-top:10px; display:flex; justify-content:center; gap:18px;">
      <a href="#" style="display:inline-flex; background:#4caf50; padding:10px; border-radius:50%;">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" width="22" style="filter:invert(1);">
+      <img src="https://wa.me/5491126868237" width="22" style="filter:invert(1);">
     </a>
 
     <a href="#" style="display:inline-flex; background:#3b5998; padding:10px; border-radius:50%;">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" width="22" style="filter:invert(1);">
+      <img src="https://www.facebook.com/mauro200dom" width="22" style="filter:invert(1);">
     </a>
 
     <a href="#" style="display:inline-flex; background:#d35400; padding:10px; border-radius:50%;">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" width="22" style="filter:invert(1);">
+      <img src="https://www.instagram.com/coffehousee2025/?utm_source=ig_web_button_share_sheet" width="22" style="filter:invert(1);">
     </a>
   </div>
   </footer>
@@ -410,7 +409,7 @@
   const modeBtn = document.getElementById('modeToggle');
   modeBtn.addEventListener('click',()=>{document.body.classList.toggle('light-mode');});
 
-  // --- LÓGICA DEL CARRUSEL ---
+  //  CARRUSEL INICIO
   const carouselButtons = document.querySelectorAll('.nav-btn');
   carouselButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -420,7 +419,7 @@
       const productElement = carousel.querySelector('.producto');
       if (!productElement) return;
 
-      // Se utiliza el ancho del producto más el espacio (gap) para el desplazamiento
+      // el desplazamiento
       const productWidth = productElement.getBoundingClientRect().width;
       const gap = 12; 
 
@@ -433,7 +432,7 @@
       }
     });
   });
-  // --- FIN LÓGICA DEL CARRUSEL ---
+  // FIN CARRUSEL
 
 
   const productos = document.querySelectorAll('.producto');
@@ -451,9 +450,9 @@
       alert(`${prod.dataset.nombre} agregado al carrito`);
     });
     
-    // 🎯 LÓGICA DE HOVER PARA EL FONDO
+    
     prod.addEventListener('mouseenter',()=>{
-      const imagePath = prod.dataset.img; // Usamos la ruta del atributo data-img
+      const imagePath = prod.dataset.img;
       if (imagePath) {
         document.body.style.backgroundImage=`url(${imagePath})`;
         document.body.classList.add('bg-animate');
