@@ -6,30 +6,59 @@
 <title>Coffee House</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
+  /* --- ESTILOS ORIGINALES Y MODIFICADOS --- */
   *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif}
   html,body{height:100%}
   body{
     min-height:100vh;
     background-color:#5d4037;
     color:#ffffff;
-    transition:background 1s ease, color 0.4s ease;
+    /* --- TRANSICIÓN MEJORADA --- */
+    transition: background 1s ease, background-image 0.6s ease, color 0.4s ease, filter 0.6s ease; /* Transición para el filtro */
     overflow-x:hidden;
     position:relative;
+    
+    /* 🎯 PROPIEDADES AÑADIDAS/MODIFICADAS PARA LA IMAGEN DE FONDO */
+    background-size: cover; 
+    background-position: center center; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
+    
+    /* Filtro inicial para modo oscuro: oscurece un poco la imagen de fondo */
+    filter: brightness(0.8); 
   }
-  /* Vapor animado */
+  
+  /* ESTILOS ESPECÍFICOS PARA EL MODO CLARO */
+  body.light-mode {
+    background-color:#f4ebe2; /* Fondo claro */
+    color:#222222; /* Texto oscuro */
+    /* 🎯 ACLARA LA IMAGEN DE FONDO EN MODO CLARO (1.2 = 120% de brillo) */
+    filter: brightness(1.2); 
+  }
+
+  /* --- CONTROL DE FILTROS PARA EVITAR PROBLEMAS --- */
+  /* Si no hay imagen de fondo, se quita el filtro para que el color de fondo se vea normal */
+  body:not([style*="background-image"]) {
+    filter: none;
+  }
+  /* Cuando el fondo está animándose (apareciendo), podemos establecer un filtro temporal si es necesario */
+  body.bg-animate[style*="background-image"] {
+    filter: brightness(0.9); /* Ligeramente más oscuro para que la animación destaque */
+  }
+  /* Si el modo claro está activo Y hay imagen de fondo, aplicamos el filtro claro */
+  body.light-mode[style*="background-image"] {
+    filter: brightness(1.2); 
+  }
+  /* Si el modo claro está activo PERO NO hay imagen de fondo, quitamos el filtro */
+  body.light-mode:not([style*="background-image"]) {
+    filter: none;
+  }
+  /* --- FIN CONTROL DE FILTROS --- */
+
   .steam{
-    position:fixed;
-    top:10%;
-    left:50%;
-    width:300px;
-    height:260px;
-    transform:translateX(-50%);
-    pointer-events:none;
+    position:fixed;top:10%;left:50%;width:300px;height:260px;transform:translateX(-50%);pointer-events:none;
     background: radial-gradient(circle, rgba(255,255,255,0.45) 8%, transparent 55%);
-    filter: blur(60px);
-    animation: steamMove 6s infinite ease-in-out;
-    opacity:0.35;
-    z-index:90;
+    filter: blur(60px);animation: steamMove 6s infinite ease-in-out;opacity:0.35;z-index:90;
   }
   @keyframes steamMove{
     0%{ transform:translateX(-50%) translateY(0); opacity:0.25}
@@ -39,20 +68,9 @@
   }
   body.bg-animate{ animation: fadeZoom 1.2s ease forwards; }
   @keyframes fadeZoom{ 0%{opacity:0;transform:scale(1.06)} 100%{opacity:1;transform:scale(1)} }
-  /* Header */
   header{
-    background: rgba(93,64,55,0.95);
-    display:flex;
-    gap:12px;
-    align-items:center;
-    justify-content:space-between;
-    padding:14px 22px;
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    z-index:100;
-    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+    background: rgba(93,64,55,0.95);display:flex;gap:12px;align-items:center;justify-content:space-between;
+    padding:14px 22px;position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:0 6px 18px rgba(0,0,0,0.25);
   }
   .logo{display:flex;align-items:center;gap:10px;font-weight:700;cursor:pointer}
   .logo img{width:48px;height:48px;border-radius:50%;object-fit:cover;transition:transform .6s}
@@ -68,77 +86,131 @@
   .menu-toggle.rotate span:nth-child(2){opacity:0}
   .menu-toggle.rotate span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
   .btn-mode, .btn-carrito{
-    background:rgba(0,0,0,0.25);
-    padding:8px 12px;
-    border-radius:8px;
-    border:1px solid rgba(255,255,255,0.12);
-    cursor:pointer;
-    color:#ffffff;
-    font-size:.9rem;
-    transition:0.3s;
+    background:rgba(0,0,0,0.25);padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);
+    cursor:pointer;color:#ffffff;font-size:.9rem;transition:0.3s;
   }
   .btn-mode:hover, .btn-carrito:hover{background:rgba(0,0,0,0.35);}
-  main{padding:110px 20px 100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;align-items:start;max-width:1300px;margin:0 auto}
+  main{padding:110px 0 100px; max-width:1300px; margin:0 auto;}
   .producto{
-    background:rgba(255,255,255,0.06);
-    border-radius:14px;
-    overflow:hidden;
-    width:100%;
-    cursor:pointer;
-    transition:transform .35s,box-shadow .35s,filter .35s,background .35s;
-    position:relative;
-    opacity:0;
-    transform:translateY(30px);
-    border:1px solid rgba(255,255,255,0.03);
-    backdrop-filter: blur(6px);
+    background:rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;width:100%;cursor:pointer;
+    transition:transform .35s,box-shadow .35s,filter .35s,background .35s;position:relative;
+    opacity:1;
+    transform:translateY(0);
+    border:1px solid rgba(255,255,255,0.03);backdrop-filter: blur(6px);
+    flex-shrink: 0;
+    width: 250px;
   }
-  .producto.visible{opacity:1;transform:translateY(0)}
   .producto:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,0.5);filter:brightness(1.08)}
   .producto img{width:100%;height:160px;object-fit:cover;display:block}
   .producto .info{padding:12px;text-align:center;background:linear-gradient(180deg,rgba(0,0,0,0.04), rgba(0,0,0,0.18))}
   .producto h4{font-size:1.05rem;margin-bottom:6px}
   .producto p{font-size:.92rem;color:#e6e6e6}
-  .categoria{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 6px 4px 6px;}
+  .categoria-wrapper{
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0 20px;
+  }
+  .categoria{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:20px 0 4px 0;
+  }
   .categoria h3{font-size:1.2rem;letter-spacing:.3px}
   footer{
-    background-color: rgba(93,64,55,0.9);
-    text-align:center;
-    padding:18px;
-    transition: background-color .6s ease, backdrop-filter .6s ease;
-    backdrop-filter: blur(4px);
-    position:fixed;
-    bottom:16px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:95;
-    border-radius:10px;
-    min-width:220px;
-    max-width:90%;
-    box-shadow:0 12px 30px rgba(0,0,0,0.35);
-    color:#ffffff;
-    font-weight:500;
+    background-color: rgba(93,64,55,0.9);text-align:center;padding:18px;
+    transition: background-color .6s ease, backdrop-filter .6s ease;backdrop-filter: blur(4px);
+    position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:95;
+    border-radius:10px;min-width:220px;max-width:90%;box-shadow:0 12px 30px rgba(0,0,0,0.35);
+    color:#ffffff;font-weight:500;
   }
   body.bg-animate footer{background-color: rgba(0,0,0,0.18) !important;backdrop-filter: blur(10px);color:#ffffff;}
-  .light-mode{background:#f4ebe2;color:#222222}
   .light-mode header{background:rgba(244,235,226,0.95)}
   .light-mode .producto{background:rgba(0,0,0,0.03);color:#222222;border:1px solid rgba(0,0,0,0.04)}
   .light-mode footer{background:rgba(244,235,226,0.9);color:#222222}
   .add-cart{
-    margin-top:8px;
-    padding:6px 10px;
-    background:#795548;
-    color:#ffffff;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    transition:0.3s;
+    margin-top:8px;padding:6px 10px;background:#795548;color:#ffffff;border:none;
+    border-radius:6px;cursor:pointer;transition:0.3s;
   }
   .add-cart:hover{background:#6d4c41;}
+
+  /* --- ESTILOS PARA EL CARRUSEL --- */
+  .carousel-container{
+    position:relative;
+  }
+  .carousel-productos{
+    display: flex;
+    gap: 12px;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px 0;
+    margin: 0;
+  }
+  .carousel-productos::-webkit-scrollbar {
+    display: none;
+  }
+  .carousel-productos {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 50;
+    font-weight: bold;
+    transition: background 0.3s;
+    line-height: 1; 
+
+    /* Propiedades para hacerlo REDONDO y centrar la flecha */
+    border-radius: 50%; 
+    width: 45px; 
+    height: 45px;
+    font-size: 1.5rem; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .nav-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .nav-btn.left {
+    left: 0;
+    margin-left: 20px;
+  }
+  .nav-btn.right {
+    right: 0;
+    margin-right: 20px;
+  }
+
+  /* --- MEDIA QUERIES (Asegurando la vista en móviles) --- */
   @media (max-width:700px){
     .logo img{width:42px;height:42px}
     .producto img{height:140px}
     header{padding:10px 14px}
-    main{padding:100px 12px 120px;gap:12px}
+    main{padding:100px 0 120px}
+    .categoria-wrapper{padding: 0 12px}
+    
+    /* Ajuste para que los productos sean un poco más pequeños en móvil */
+    .producto{width: 200px;} 
+
+    /* Ajuste de los botones redondos para móvil */
+    .nav-btn {
+        width: 38px; 
+        height: 38px;
+        font-size: 1.3rem;
+    }
+     .nav-btn.left { 
+        left: 0; 
+        margin-left: 10px; 
+    }
+     .nav-btn.right { 
+        right: 0; 
+        margin-right: 10px; 
+    }
   }
 </style>
 </head>
@@ -151,7 +223,6 @@
         <img src="logo.jpeg" alt="Logo Coffee House">
         <div style="display:flex;flex-direction:column;line-height:1">
           <span style="font-size:1rem">MENÙ</span>
-         
         </div>
       </div>
     </div>
@@ -171,77 +242,161 @@
   </header>
 
   <main>
-    <!-- Cafés -->
-    <div class="categoria"><h3>Cafés & Especialidades</h3><small>Seleccioná para ver fondo</small></div>
-    <div class="producto" data-nombre="Espresso Doble" data-precio="5450">
-      <img src="cafe1.jpg" alt="Café especial">
-      <div class="info"><h4>Espresso Doble</h4><p>Con crema intensa y cuerpo completo. $5450</p></div>
+    
+    <div class="categoria-wrapper">
+      <div class="categoria"><h3>Cafés & Especialidades</h3><small>Seleccioná para ver fondo</small></div>
+      <div class="carousel-container">
+        <button class="nav-btn left" data-target="carousel-cafe">&lt;</button>
+        <div class="carousel-productos" id="carousel-cafe">
+          <div class="producto" data-nombre="Espresso Doble" data-precio="5450" data-img="cafe1.jpg">
+            <img src="cafe1.jpg" alt="Café especial">
+            <div class="info"><h4>Espresso Doble</h4><p>Con crema intensa y cuerpo completo. $5450</p></div>
+          </div>
+          <div class="producto" data-nombre="Cappuccino Clásico" data-precio="4550" data-img="cafe2.jpg">
+            <img src="cafe2.jpg" alt="Cappuccino">
+            <div class="info"><h4>Cappuccino Clásico</h4><p>Espuma densa, aroma a cacao. $4550</p></div>
+          </div>
+          <div class="producto" data-nombre="Cold Brew" data-precio="5000" data-img="cafe3.jpg">
+            <img src="cafe3.jpg" alt="Cold brew">
+            <div class="info"><h4>Cafè latte</h4><p>Extracción fría, sabor suave y limpio. $5000</p></div>
+          </div>
+          <div class="producto" data-nombre="Latte Vainilla" data-precio="3600" data-img="cafe4.jpg">
+            <img src="cafe4.jpg" alt="Latte">
+            <div class="info"><h4>Cafe americano</h4><p>Cafè negro con suave dulsura y esquisito $3600</p></div>
+          </div>
+          <div class="producto" data-nombre="Macchiato" data-precio="5800" data-img="cafe5.jpg">
+            <img src="cafe5.jpg" alt="Macchiato">
+            <div class="info"><h4>Macchiato</h4><p>Espresso con una pequeña cantidad de leche o espuma. $5800</p></div>
+          </div>
+          <div class="producto" data-nombre="Mocha" data-precio="4800" data-img="cafe6.jpeg">
+            <img src="cafe6.jpeg" alt="Mocha">
+            <div class="info"><h4>Mocha</h4><p>Latte con chocolate. $4800</p></div>
+          </div>
+          <div class="producto" data-nombre="Cafe frio" data-precio="4700" data-img="cafe7.jpeg">
+            <img src="cafe7.jpeg" alt="Cafe frio">
+            <div class="info"><h4>Cafè frio</h4><p>con cubos de hielo y cocholate. $4700</p></div>
+          </div>
+          <div class="producto" data-nombre="Cafè con leche " data-precio="4200" data-img="cafe8.jpg">
+            <img src="cafe8.jpg" alt="Cafè con leche ">
+            <div class="info"><h4>Cafè con leche</h4><p>Una mezcla simple de café y leche, a menudo en proporciones 50/50. $4200</p></div>
+          </div>
+          <div class="producto" data-nombre="Cafè negro" data-precio="5100" data-img="cafe9.jpg">
+            <img src="cafe9.jpg" alt="Cafè negro">
+            <div class="info"><h4>Cafè negro</h4><p>Cafè puro o a eleccion de azurcar. $5100</p></div>
+          </div>
+        </div>
+        <button class="nav-btn right" data-target="carousel-cafe">&gt;</button>
+      </div>
     </div>
-    <div class="producto" data-nombre="Cappuccino Clásico" data-precio="4550">
-      <img src="cafe2.jpg"Cappuccino">
-      <div class="info"><h4>Cappuccino Clásico</h4><p>Espuma densa, aroma a cacao. $4550</p></div>
-    </div>
-    <div class="producto" data-nombre="Cold Brew" data-precio="5000">
-      <img src="cafe3.jpg" alt="Cold brew">
-      <div class="info"><h4>Cafè latte</h4><p>Extracción fría, sabor suave y limpio. $5000</p></div>
-    </div>
-    <div class="producto" data-nombre="Latte Vainilla" data-precio="3600">
-      <img src="cafe4.jpg" alt="Latte">
-      <div class="info"><h4>Cafe americano</h4><p>Cafè negro con suave dulsura y esquisito $3600</p></div>
+    
+    <div class="categoria-wrapper">
+      <div class="categoria"><h3>Desayunos & Bocadillos</h3><small>Combos ideales para la mañana</small></div>
+      <div class="carousel-container">
+        <button class="nav-btn left" data-target="carousel-desayuno">&lt;</button>
+        <div class="carousel-productos" id="carousel-desayuno">
+          <div class="producto" data-nombre="Tostadas" data-precio="3600" data-img="almuerzo1.jpg">
+            <img src="almuerzo1.jpg" alt="Tostada">
+            <div class="info"><h4>Tostadas</h4><p>tostada de jamon queso  $3600</p></div>
+          </div>
+          <div class="producto" data-nombre="chocotorta" data-precio="7080" data-img="almuerzo2.jpg">
+            <img src="almuerzo2.jpg" alt="chocotorta">
+            <div class="info"><h4>chocotorta</h4><p>Porcion bastante grande para una persona. $7080</p></div>
+          </div>
+          <div class="producto" data-nombre="Wafles" data-precio="2200" data-img="almuerzo3.jpg">
+            <img src="almuerzo3.jpg" alt="Wafles">
+            <div class="info"><h4>Wafles</h4><p>porcion que contiene frutos y miel a gusto. $2200</p></div>
+          </div>
+          <div class="producto" data-nombre="sanwinch de miga" data-precio="2200" data-img="almuerzo4.jpg">
+            <img src="almuerzo4.jpg" alt="sanwinch de miga">
+            <div class="info"><h4>sanwinche miga</h4><p>porcion para una persona con jamon y queso. $2200</p></div>
+          </div>
+          <div class="producto" data-nombre="Chipa" data-precio="3100" data-img="almuerzo5.jpg">
+            <img src="almuerzo5.jpg" alt="Chipa">
+            <div class="info"><h4>Chipa</h4><p>masa de maiz y almidon con o sin relleno. $3100</p></div>
+          </div>
+          <div class="producto" data-nombre="Croissant Relleno" data-precio="4200" data-img="almuerzo6.jpg">
+            <img src="almuerzo6.jpg" alt="Croissant Relleno">
+            <div class="info"><h4>Croissant Relleno</h4><p>Croissant con jamón crudo y queso brie. $4200</p></div>
+          </div>
+          <div class="producto" data-nombre="Omelette Clásico" data-precio="5500" data-img="almuerzo7.jpg">
+            <img src="almuerzo7.jpg" alt="Omelette Clásico">
+            <div class="info"><h4>Omelette Clásico</h4><p>Huevos, queso y hierbas frescas. $5500</p></div>
+          </div>
+          <div class="producto" data-nombre="Tostado de Palta" data-precio="4800" data-img="almuerzo8.jpg">
+            <img src="almuerzo8.jpg" alt="Tostado de Palta">
+            <div class="info"><h4>Tostado de Palta</h4><p>Pan de masa madre, palta pisada y huevo poché. $4800</p></div>
+          </div>
+          <div class="producto" data-nombre="Pancakes con Syrup" data-precio="4000" data-img="almuerzo9.jpg">
+            <img src="almuerzo9.jpg" alt="Pancakes con Syrup">
+            <div class="info"><h4>Pancakes con Syrup</h4><p>Tres pancakes esponjosos con miel de arce. $4000</p></div>
+          </div>
+        </div>
+        <button class="nav-btn right" data-target="carousel-desayuno">&gt;</button>
+      </div>
     </div>
 
-    <!-- Desayunos -->
-    <div class="categoria"><h3>Desayunos & Bocadillos</h3><small>Combos ideales para la mañana</small></div>
-    <div class="producto" data-nombre="Tostadas" data-precio="3600">
-      <img src="almuerzo1.jpg" alt="Tostada">
-      <div class="info"><h4>Tostadas</h4><p>tostada de jamon queso  $3600</p></div>
-    </div>
-    <div class="producto" data-nombre="chocotorta" data-precio="7080">
-      <img src="almuerzo2.jpg" alt="<chocotorta">
-      <div class="info"><h4>chocotorta</h4><p>Porcion bastante grande para una persona. $7080</p></div>
-    </div>
-    <div class="producto" data-nombre="Wafles" data-precio="2200">
-      <img src="almuerzo3.jpg" alt="Wafles">
-      <div class="info"><h4>Wafles</h4><p>porcion que contiene frutos y miel a gusto. $2200</p></div>
-    </div>
-    <div class="producto" data-nombre="sanguche de miga" data-precio="2200">
-      <img src="almuerzo4.jpg" alt="sanguche de miga">
-      <div class="info"><h4>sanguche de miga</h4><p>porcion para una persona con jamon y queso. $2200</p></div>
+    <div class="categoria-wrapper">
+      <div class="categoria"><h3>Facturas & Pastelería</h3><small>Horneado diario</small></div>
+      <div class="carousel-container">
+        <button class="nav-btn left" data-target="carousel-pasteleria">&lt;</button>
+        <div class="carousel-productos" id="carousel-pasteleria">
+          <div class="producto" data-nombre="tortitas" data-precio="350" data-img="factura1.JPG">
+            <img src="factura1.JPG" alt="torticas">
+            <div class="info"><h4>Tortitas negras</h4><p>facturas de masa dulce con azurcar quemada. $350c/u</p></div>
+          </div>
+          <div class="producto" data-nombre="Medialuna " data-precio="300" data-img="factura2.jpg">
+            <img src="factura2.jpg" alt="Medialuna">
+            <div class="info"><h4>Medialunas</h4><p>Con dulce de leche o crema. $300c/u</p></div>
+          </div>
+          <div class="producto" data-nombre="Donas" data-precio="330" data-img="factura3.jpg">
+            <img src="factura3.jpg" alt="Donas">
+            <div class="info"><h4>Donas</h4><p>solas o rellenas con dulceo crema. $1000c/u</p></div>
+          </div>
+          <div class="producto" data-nombre="Churros" data-precio="380" data-img="factura4.jpg">
+            <img src="factura4.jpg" alt="Churros">
+            <div class="info"><h4>Churros</h4><p>rikisimos con o sin relleno. $800c/u</p></div>
+          </div>
+          <div class="producto" data-nombre="Brownies" data-precio="1200" data-img="factura5.jpg">
+            <img src="factura5.jpg" alt="Brownies">
+            <div class="info"><h4>Brownies</h4><p>Esponjoso y lleno de chocolate. $1200c/u</p></div>
+          </div>
+          <div class="producto" data-nombre="Panqueques" data-precio="500" data-img="factura6.jpg">
+            <img src="factura6.jpg" alt="Panqueques">
+            <div class="info"><h4>Panqueques</h4><p>Masa esponjosa y dulce. $500c/u</p></div>
+          </div>
+          <div class="producto" data-nombre="Cookies" data-precio="1500" data-img="factura7.jpg">
+            <img src="factura7.jpg" alt="Cookies">
+            <div class="info"><h4>Cookies</h4><p>galletas dulces con chhips de chocolate. $1500</p></div>
+          </div>
+          <div class="producto" data-nombre="Torta" data-precio="450" data-img="factura8.jpg">
+            <img src="factura8.jpg" alt="Torta">
+            <div class="info"><h4>Torta</h4><p>torta de chocolate . $450c/u</p></div>
+          </div>
+          <div class="producto" data-nombre="Pastafrora" data-precio="1350" data-img="factura9.jpg">
+            <img src="factura9.jpg" alt="Pastafrora">
+            <div class="info"><h4>Pastafrora</h4><p>de membrillo y batata. $1350</p></div>
+          </div>
+        </div>
+        <button class="nav-btn right" data-target="carousel-pasteleria">&gt;</button>
+      </div>
     </div>
 
-    <!-- Facturas / Pastelería -->
-    <div class="categoria"><h3>Facturas & Pastelería</h3><small>Horneado diario</small></div>
-    <div class="producto" data-nombre="tortitas" data-precio="350">
-      <img src="factura1.JPG" alt="torticas">
-      <div class="info"><h4>Tortitas negras</h4><p>facturas de masa dulce con azurcar quemada. $350c/u</p></div>
-    </div>
-    <div class="producto" data-nombre="Medialuna " data-precio="300">
-      <img src="factura2.jpg" alt="Medialuna">
-      <div class="info"><h4>Medialunas</h4><p>Con dulce de leche o crema. $300c/u</p></div>
-    </div>
-    <div class="producto" data-nombre="Donas" data-precio="330">
-      <img src="factura3.jpg" alt="Donas">
-      <div class="info"><h4>Donas</h4><p>solas o rellenas con dulceo crema. $1000</p></div>
-    </div>
-    <div class="producto" data-nombre="Churros" data-precio="380">
-      <img src="factura4.jpg" alt="Churros">
-      <div class="info"><h4>Churros</h4><p>rikisimos con o sin relleno. $800c/u</p></div>
-    </div>
   </main>
 
   <footer id="pageFooter">© Coffee House 2025
-   <div style="margin-top:10px; display:flex; justify-content:center; gap:18px;"><a href="#" style="display:inline-flex; background:#4caf50; padding:10px; border-radius:50%;">
-  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" width="22" style="filter:invert(1);">
-</a>
+   <div style="margin-top:10px; display:flex; justify-content:center; gap:18px;">
+     <a href="#" style="display:inline-flex; background:#4caf50; padding:10px; border-radius:50%;">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" width="22" style="filter:invert(1);">
+    </a>
 
-<a href="#" style="display:inline-flex; background:#3b5998; padding:10px; border-radius:50%;">
-  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" width="22" style="filter:invert(1);">
-</a>
+    <a href="#" style="display:inline-flex; background:#3b5998; padding:10px; border-radius:50%;">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" width="22" style="filter:invert(1);">
+    </a>
 
-<a href="#" style="display:inline-flex; background:#d35400; padding:10px; border-radius:50%;">
-  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" width="22" style="filter:invert(1);">
-</a>
-
+    <a href="#" style="display:inline-flex; background:#d35400; padding:10px; border-radius:50%;">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" width="22" style="filter:invert(1);">
+    </a>
+  </div>
   </footer>
 
   <audio id="bgAudio" loop crossorigin="anonymous">
@@ -255,8 +410,36 @@
   const modeBtn = document.getElementById('modeToggle');
   modeBtn.addEventListener('click',()=>{document.body.classList.toggle('light-mode');});
 
+  // --- LÓGICA DEL CARRUSEL ---
+  const carouselButtons = document.querySelectorAll('.nav-btn');
+  carouselButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const carouselId = button.dataset.target;
+      const carousel = document.getElementById(carouselId);
+      
+      const productElement = carousel.querySelector('.producto');
+      if (!productElement) return;
+
+      // Se utiliza el ancho del producto más el espacio (gap) para el desplazamiento
+      const productWidth = productElement.getBoundingClientRect().width;
+      const gap = 12; 
+
+      const scrollDistance = productWidth + gap; 
+
+      if (button.classList.contains('left')) {
+        carousel.scrollLeft -= scrollDistance;
+      } else if (button.classList.contains('right')) {
+        carousel.scrollLeft += scrollDistance;
+      }
+    });
+  });
+  // --- FIN LÓGICA DEL CARRUSEL ---
+
+
   const productos = document.querySelectorAll('.producto');
   productos.forEach(prod=>{
+    
+    // Creación y lógica del botón "Agregar al carrito"
     const btn=document.createElement('button');
     btn.textContent="Agregar al carrito";
     btn.className="add-cart";
@@ -267,25 +450,38 @@
       localStorage.setItem('carrito',JSON.stringify(carrito));
       alert(`${prod.dataset.nombre} agregado al carrito`);
     });
+    
+    // 🎯 LÓGICA DE HOVER PARA EL FONDO
     prod.addEventListener('mouseenter',()=>{
-      const src=prod.querySelector('img').src;
-      document.body.style.backgroundImage=`url(${src})`;
-      document.body.classList.add('bg-animate');
-      document.getElementById('pageFooter').style.zIndex=95;
+      const imagePath = prod.dataset.img; // Usamos la ruta del atributo data-img
+      if (imagePath) {
+        document.body.style.backgroundImage=`url(${imagePath})`;
+        document.body.classList.add('bg-animate');
+        document.getElementById('pageFooter').style.zIndex=95;
+      }
     });
+    
     prod.addEventListener('mouseleave',()=>{
       document.body.style.backgroundImage='none';
       document.body.classList.remove('bg-animate');
     });
+    
     prod.setAttribute('tabindex','0');
     prod.addEventListener('keydown',e=>{
-      if(e.key==='Enter'||e.key===' '){const src=prod.querySelector('img').src;document.body.style.backgroundImage=`url(${src})`;document.body.classList.add('bg-animate');}
+      if(e.key==='Enter'||e.key===' '){
+        const imagePath = prod.dataset.img;
+        if (imagePath) {
+          document.body.style.backgroundImage=`url(${imagePath})`;
+          document.body.classList.add('bg-animate');
+        }
+      }
     });
   });
 
-  function revealProducts(){document.querySelectorAll('.producto').forEach(p=>{const top=p.getBoundingClientRect().top;if(top<window.innerHeight-60)p.classList.add('visible');});}
-  window.addEventListener('scroll',revealProducts);
-  window.addEventListener('load',revealProducts);
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.producto').forEach(p => p.classList.add('visible'));
+  });
+
 
   const audio=document.getElementById('bgAudio');
   audio.volume=0.35;
